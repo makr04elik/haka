@@ -2,16 +2,16 @@ import json
 import requests
 from pathlib import Path
 
-# === Настройки ===
-OPENROUTER_API_KEY = "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"  # ваш ключ
-API_URL = "https://openrouter.ai/api/v1/chat/completions"  # ← без пробелов!
 
-# Используем Llama 3.2 3B Instruct (free)
+OPENROUTER_API_KEY = "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"
+API_URL = "https://openrouter.ai/api/v1/chat/completions" 
+
+
 MODEL = "meta-llama/llama-3.2-3b-instruct:free"
 
 DATA_DIR = Path("data")
 
-# === Функции ===
+
 
 def load_all_geojsons(directory: Path):
     """Загружает все файлы GeoJSON из папки."""
@@ -28,17 +28,45 @@ def load_all_geojsons(directory: Path):
 
 
 def find_road_segment(features, user_query):
-    """Ищет подходящий участок дороги по тексту запроса."""
     query_lower = user_query.lower()
+    best_match = None
+    best_score = 0
+
     for feature in features:
         props = feature.get("properties", {})
-        name = props.get("name", "").lower()
-        segment = props.get("segment", "").lower()
-        # Проверяем, что и имя, и сегмент упомянуты в запросе
-        if name in query_lower and segment in query_lower:
-            return props
-    return None
+        st_name = str(props.get("ST_NAME", "")).strip()
+        cross_f = str(props.get("CrossNameF", "")).strip()
+        cross_t = str(props.get("CrossNameT", "")).strip()
 
+        
+        st_name_lower = st_name.lower()
+        cross_f_lower = cross_f.lower()
+        cross_t_lower = cross_t.lower()
+
+        score = 0
+
+        
+        if st_name_lower and st_name_lower in query_lower:
+            score += 10
+        elif query_lower in st_name_lower: 
+            score += 8
+
+
+        if cross_f_lower and cross_f_lower in query_lower:
+            score += 5
+        if cross_t_lower and cross_t_lower in query_lower:
+            score += 5
+
+        
+        edge_id = props.get("EdgeId")
+        if edge_id and str(edge_id) in query_lower:
+            score += 15
+
+        if score > best_score:
+            best_score = score
+            best_match = props
+
+    return best_match if best_score > 0 else None
 
 def analyze_with_ai(user_query, road_data):
     """Отправляет запрос к OpenRouter API с использованием Llama 3.2 3B Instruct."""
@@ -62,7 +90,7 @@ def analyze_with_ai(user_query, road_data):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",      # ← допустимо для локального запуска
+        "HTTP-Referer": "http://localhost",
         "X-Title": "URBANAI ADVISOR"
     }
 
