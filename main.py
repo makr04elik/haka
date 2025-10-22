@@ -23,7 +23,7 @@ def load_all_geojsons(directory: Path):
                 if data.get("type") == "FeatureCollection":
                     all_features.extend(data.get("features", []))
         except Exception as e:
-            print(f"⚠️ Ошибка чтения {file.name}: {e}")
+            print(f"XX Ошибка чтения {file.name}: {e}")
     return all_features
 
 
@@ -97,41 +97,41 @@ def analyze_with_ai(user_query, road_data):
     try:
         response = requests.post(API_URL, headers=headers, data=json.dumps(payload), timeout=30)
     except requests.exceptions.RequestException as e:
-        return f"⚠️ Ошибка соединения: {e}"
+        return f"XX Ошибка соединения: {e}"
 
     if response.status_code != 200:
-        return f"⚠️ Ошибка API ({response.status_code}): {response.text}"
+        return f"XX Ошибка API ({response.status_code}): {response.text}"
 
     try:
         return response.json()["choices"][0]["message"]["content"].strip()
     except (KeyError, IndexError, TypeError) as e:
-        return f"⚠️ Ошибка обработки ответа: {e}\nПолный ответ: {response.text}"
+        return f"XX Ошибка обработки ответа: {e}\nПолный ответ: {response.text}"
 
 
 def main():
-    print("🤖 URBANAI ADVISOR — Анализ дорожной ситуации")
+    print("URBANAI ADVISOR — Анализ дорожной ситуации")
     print("Введите запрос, например: 'Проанализируй участок Ленинского проспекта от д.50 до д.100'")
-    user_query = input("👤 ПОЛЬЗОВАТЕЛЬ: ")
+    user_query = input("ПОЛЬЗОВАТЕЛЬ: ")
 
-    print("\n📂 Загрузка всех GeoJSON файлов из папки 'data/'...")
+    print("\n Загрузка всех GeoJSON файлов из папки 'data/'...")
     features = load_all_geojsons(DATA_DIR)
 
     if not features:
-        print("❌ В папке 'data/' нет файлов GeoJSON.")
+        print("XX В папке 'data/' нет файлов GeoJSON.")
         return
 
     segment = find_road_segment(features, user_query)
 
     if not segment:
-        print("❌ Не удалось найти участок дороги, соответствующий запросу.")
-        print("💡 Убедитесь, что в запросе есть и название дороги (например, 'Ленинский проспект'), и сегмент (например, 'от д.50 до д.100').")
+        print("XX Не удалось найти участок дороги, соответствующий запросу.")
+        print("!! Убедитесь, что в запросе есть и название дороги (например, 'Ленинский проспект'), и сегмент (например, 'от д.50 до д.100').")
         return
 
-    print("\n🔍 Выполняется анализ, подождите...\n")
+    print("\n Выполняется анализ, подождите...\n")
 
     result = analyze_with_ai(user_query, segment)
 
-    print("\n🤖 URBANAI ADVISOR:\n")
+    print("\n URBANAI ADVISOR:\n")
     print(result)
 
 
