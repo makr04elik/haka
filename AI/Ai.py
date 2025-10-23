@@ -67,7 +67,7 @@ with open(OUT_CSV, "w", newline='', encoding='utf-8') as fout:
                                             x0,y0 = transformer.transform(coords[j][0], coords[j][1])
                                             x1,y1 = transformer.transform(coords[j+1][0], coords[j+1][1])
                                             seg_len = ((x1-x0)2 + (y1-y0)2)**0.5
-                                            length_m += seg_len 
+                                            length_m += seg_len
                                         bearing = compute_bearing_coords(coords[0], coords[-1])
                                         row = {
                                             "source_file": fname,
