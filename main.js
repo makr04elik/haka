@@ -56,12 +56,12 @@ async function findRoadSegmentSmart(userQuery) {
           (p.EdgeId && query.includes(String(p.EdgeId)))
         ) {
           console.log("✅ Найден в файле:", file);
-          return p; // нашли — сразу возвращаем
+          return p;
         }
       }
     }
 
-    return null; // если не нашли
+    return null;
   } catch (e) {
     console.error("Ошибка при поиске:", e);
     return null;
