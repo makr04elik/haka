@@ -42,7 +42,7 @@ def find_road_segment(features, user_query):
         st_name_lower = st_name.lower()
         cross_f_lower = cross_f.lower()
         cross_t_lower = cross_t.lower()
-
+        
         score = 0
 
         

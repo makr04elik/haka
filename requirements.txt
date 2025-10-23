@@ -1,0 +1,14 @@
+geopandas
+fiona
+shapely
+pyproj
+networkx
+pandas
+numpy
+scikit-learn
+hdbscan
+lightgbm
+matplotlib
+contextily
+geopy
+tqdm
