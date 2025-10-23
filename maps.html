@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URBANAI ADVISOR 🌆</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map-container {
+            width: 100%;
+            max-width: 700px;
+            height: 400px;
+            margin: 30px auto 0;
+            border-radius: 15px; 
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+      
+        #map-container.shifted {
+            margin-bottom: -200px;
+        }
+
+        
+        .mask-rectangle {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px; 
+            background: linear-gradient(to right, #88d1ea, #88d1ea); 
+            z-index: 1001; 
+        }
+
+        
+        @media (max-width: 768px) {
+            #map-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>URBANAI ADVISOR 🌆</h1>
+        <p>Введите запрос, например:<br><i>Проанализируй участок Ленинского проспекта от д.50 до д.100</i></p>
+    </header>
+
+    <main>
+        <textarea id="userQuery" placeholder="Опишите участок дороги для анализа."></textarea>
+        <button type="button" onclick="analyze()">Анализировать</button>
+        <pre id="output"></pre>
+    </main>
+
+    
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="mask-rectangle"></div>
+    </div>
+
+    <footer>
+        &copy; 2025 URBANAI ADVISOR. Все права защищены.
+    </footer>
+
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="main.js"></script>
+    <script>
+        let map;
+        let marker;
+
+        
+        function initMap() {
+            
+            map = L.map('map', {
+                center: [55.751244, 37.618423],
+                zoom: 10,
+                scrollWheelZoom: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const input = document.getElementById('userQuery');
+
+            let debounceTimer;
+            input.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const query = input.value.trim();
+                    if (query.length > 5) { 
+                        searchAddress(query);
+                    }
+                }, 500);
+            });
+        }
+
+
+        async function searchAddress(address) {
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&addressdetails=1&limit=1&countrycodes=RU`
+                );
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+
+                    map.setView([lat, lon], 15);
+
+                    if (marker) map.removeLayer(marker);
+
+                    marker = L.marker([lat, lon]).addTo(map);
+                }
+            } catch (e) {
+                console.error('Ошибка геокодирования:', e);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            document.getElementById('map-container').classList.add('shifted');
+        });
+    </script>
+</body>
+</html>

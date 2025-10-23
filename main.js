@@ -1,6 +1,6 @@
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL = "meta-llama/llama-3.2-3b-instruct:free";
-const OPENROUTER_API_KEY = "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"; // вставь сюда свой ключ без пробелов и без кириллицы
+const OPENROUTER_API_KEY = "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";
 
 async function loadAllGeoJSONs() {
   try {
