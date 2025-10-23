@@ -1,0 +1,99 @@
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+    background: linear-gradient(to right, #88d1ea, #88d1ea);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    color: #333;
+}
+header {
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+header p {
+    font-size: 1.1rem;
+    color: #f0f0f0;
+}
+main {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 50px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    color: #333;
+}
+textarea {
+    resize: none;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    min-height: 150px;
+    background: #fff;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width: 100%;
+}
+textarea::placeholder {
+    color: #888;
+}
+button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: #38485d;
+    color: #fff;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+button:hover {
+    background: #38485d; /* можно оставить как есть или сделать темнее */
+}
+#output {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    font-family: 'Segoe UI', monospace;
+    color: #333;
+    border: 1px solid #eee;
+}
+footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #f0f0f0;
+}
+@media(max-width: 768px){
+    main {
+        margin-top: 30px;
+        padding: 15px;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
+}
